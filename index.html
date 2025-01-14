@@ -224,66 +224,55 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-<script>const readline = require("readline");
-const random = Math.floor(Math.random() * 20000) + 1;
-let guess = null;
+<div id="game"> <h1>Guess a Number Between 1 and 20000</h1> <input type="number" id="guess-input" /> <button id="guess-button">Submit Guess</button> <p id="message"></p> <p id="status"></p> </div>
+		<script>const random = Math.floor(Math.random() * 20000) + 1;
 let tries = 0;
 const timeout = 20 * 60 * 1000; // 20 minutes in milliseconds
 const startTime = Date.now();
+const input = document.getElementById('guess-input');
+const button = document.getElementById('guess-button');
+const message = document.getElementById('message');
+const status = document.getElementById('status');
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-console.log("Guess a number between 1 to 20000");
+button.addEventListener('click', askGuess);
 
 function askGuess() {
-  tries++;
   const roundStart = Date.now();
+  tries++;
+  
+  let guess = parseInt(input.value);
 
-  rl.question(`Round ${tries}: `, (input) => {
-    const roundStop = Date.now();
-    const roundDuration = Math.round((roundStop - roundStart) / 1000);
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = Math.round((timeout - elapsedTime) / 60000);
+  if (isNaN(guess)) {
+    message.textContent = "Please enter an integer";
+    tries--;
+    return;
+  }
 
-    guess = parseInt(input);
+  const roundStop = Date.now();
+  const roundDuration = Math.round((roundStop - roundStart) / 1000);
+  const elapsedTime = Date.now() - startTime;
+  const remainingTime = Math.round((timeout - elapsedTime) / 60000);
 
-    if (isNaN(guess)) {
-      console.log("Please enter an integer");
-      tries--;
-      askGuess();
-      return;
-    }
+  if (guess > random) {
+    message.textContent = `Too high, time taken ${roundDuration} s, remaining ${remainingTime} m.`;
+  } else if (guess < random) {
+    message.textContent = `Too low, time taken ${roundDuration} s, remaining ${remainingTime} m.`;
+  } else {
+    message.textContent = 'Congratulations. You guessed it!';
+    status.textContent = `Number of tries: ${tries}, total time: ${Math.round(elapsedTime / 60000)} m.`;
+    button.disabled = true;
+    return;
+  }
 
-    if (guess > random) {
-      console.log(
-        `Too high, time taken ${roundDuration} s, remaining ${remainingTime} m`
-      );
-    } else if (guess < random) {
-      console.log(
-        `Too low, time taken ${roundDuration} s, remaining ${remainingTime} m`
-      );
-    } else {
-      console.log("Congratulations. You guessed it!");
-      console.log(
-        `Number of tries ${tries} and total time ${Math.round(elapsedTime / 60000)} m`
-      );
-      rl.close();
-      return;
-    }
-
-    if (elapsedTime >= timeout) {
-      console.log("Time's up.");
-      rl.close();
-    } else {
-      askGuess();
-    }
-  });
+  if (elapsedTime >= timeout) {
+    message.textContent = "Time's up.";
+    button.disabled = true;
+    return;
+  }
+  input.value = '';
 }
 
-askGuess();
+
 	</script>
 	</body>
 </html>
