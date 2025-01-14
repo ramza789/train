@@ -224,6 +224,66 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+<script>const readline = require("readline");
+const random = Math.floor(Math.random() * 20000) + 1;
+let guess = null;
+let tries = 0;
+const timeout = 20 * 60 * 1000; // 20 minutes in milliseconds
+const startTime = Date.now();
 
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+console.log("Guess a number between 1 to 20000");
+
+function askGuess() {
+  tries++;
+  const roundStart = Date.now();
+
+  rl.question(`Round ${tries}: `, (input) => {
+    const roundStop = Date.now();
+    const roundDuration = Math.round((roundStop - roundStart) / 1000);
+    const elapsedTime = Date.now() - startTime;
+    const remainingTime = Math.round((timeout - elapsedTime) / 60000);
+
+    guess = parseInt(input);
+
+    if (isNaN(guess)) {
+      console.log("Please enter an integer");
+      tries--;
+      askGuess();
+      return;
+    }
+
+    if (guess > random) {
+      console.log(
+        `Too high, time taken ${roundDuration} s, remaining ${remainingTime} m`
+      );
+    } else if (guess < random) {
+      console.log(
+        `Too low, time taken ${roundDuration} s, remaining ${remainingTime} m`
+      );
+    } else {
+      console.log("Congratulations. You guessed it!");
+      console.log(
+        `Number of tries ${tries} and total time ${Math.round(elapsedTime / 60000)} m`
+      );
+      rl.close();
+      return;
+    }
+
+    if (elapsedTime >= timeout) {
+      console.log("Time's up.");
+      rl.close();
+    } else {
+      askGuess();
+    }
+  });
+}
+
+askGuess();
+	</script>
 	</body>
 </html>
