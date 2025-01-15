@@ -22,8 +22,16 @@
         },
       };
     </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
-  <body class="text-xl">
+  <body class="text-2xl">
+    <i class="fas fa-horse text-sky-400 text-center"></i>
     <div
       id="game"
       class="flex-col justify-items-center justify-center items-center mt-1"
@@ -32,7 +40,7 @@
       <input id="guess-input" class="mb-2" type="number" />
       <button id="guess-button" class="btn btn-outline btn-info">Submit</button>
       <p class="text-sky-400" id="message"></p>
-      <p class="text-rose-400" id="status"></p>
+      <p id="status"></p>
     </div>
     <script>
       const random = Math.floor(Math.random() * 40000) + 1;
@@ -71,10 +79,10 @@
         let resultClass = "";
         if (guess > random) {
           resultMessage = `#${tries} ${guess} - Too high, taken ${roundDuration} s, remaining ${remainingTime} m`;
-          resultClass = "text-lime-300";
+          resultClass = "text-lime-400";
         } else if (guess < random) {
           resultMessage = `#${tries} ${guess} - Too low, taken ${roundDuration} s, remaining ${remainingTime} m.`;
-          resultClass = "text-rose-300";
+          resultClass = "text-rose-400";
         } else {
           resultMessage = `Guess: ${guess} - Congratulations. You guessed it!`;
           status.textContent = `Tries: ${tries}, total time: ${Math.round(
@@ -108,6 +116,15 @@
           results.appendChild(guessElem);
         });
       }
+
+      $(document).ready(function () {
+        $("guess-input").focus(function () {
+          $(this).css("background-color", "white");
+        });
+        $("guess-input").blur(function () {
+          $(this).css("background-color", "gray");
+        });
+      });
     </script>
   </body>
 </html>
