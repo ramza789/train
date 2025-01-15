@@ -29,6 +29,12 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
   </head>
   <body class="text-2xl">
     <i class="fas fa-horse text-sky-400 text-center"></i>
@@ -38,6 +44,16 @@
     >
       <h3 class="mb-1">Guess a Number Between 1 and 40000</h3>
       <input id="guess-input" class="mb-2" type="number" />
+      <script>
+        $(document).ready(function () {
+          $("guess-input").focus(function () {
+            $(this).css("background-color", "white");
+          });
+          $("guess-input").blur(function () {
+            $(this).css("background-color", "gray");
+          });
+        });
+      </script>
       <button id="guess-button" class="btn btn-outline btn-info">Submit</button>
       <p class="text-sky-400" id="message"></p>
       <p id="status"></p>
@@ -116,15 +132,6 @@
           results.appendChild(guessElem);
         });
       }
-
-      $(document).ready(function () {
-        $("guess-input").focus(function () {
-          $(this).css("background-color", "white");
-        });
-        $("guess-input").blur(function () {
-          $(this).css("background-color", "gray");
-        });
-      });
     </script>
   </body>
 </html>
