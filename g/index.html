@@ -31,9 +31,83 @@
       <h3 class="mb-1">Guess a Number Between 1 and 40000</h3>
       <input id="guess-input" class="mb-2" type="number" />
       <button id="guess-button" class="btn btn-outline btn-info">Submit</button>
-      <p id="message"></p>
-      <p id="status"></p>
+      <p class="text-sky-400" id="message"></p>
+      <p class="text-rose-400" id="status"></p>
     </div>
-    <script src="g.js"></script>
+    <script>
+      const random = Math.floor(Math.random() * 40000) + 1;
+      let tries = 0;
+      const timeout = 25 * 60 * 1000;
+      let guesses = [];
+      const startTime = Date.now();
+      const input = document.getElementById("guess-input");
+      const button = document.getElementById("guess-button");
+      const message = document.getElementById("message");
+      const status = document.getElementById("status");
+      const results = document.createElement("div");
+
+      document.getElementById("game").appendChild(results);
+
+      button.addEventListener("click", askGuess);
+
+      function askGuess() {
+        const roundStart = Date.now();
+        tries++;
+
+        let guess = parseInt(input.value);
+
+        if (isNaN(guess)) {
+          message.textContent = "Please enter an integer";
+          tries--;
+          return;
+        }
+
+        const roundStop = Date.now();
+        const roundDuration = Math.round((roundStop - roundStart) / 1000);
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.round((timeout - elapsedTime) / 60000);
+
+        let resultMessage;
+        let resultClass = "";
+        if (guess > random) {
+          resultMessage = `#${tries} ${guess} - Too high, taken ${roundDuration} s, remaining ${remainingTime} m`;
+          resultClass = "text-lime-300";
+        } else if (guess < random) {
+          resultMessage = `#${tries} ${guess} - Too low, taken ${roundDuration} s, remaining ${remainingTime} m.`;
+          resultClass = "text-rose-300";
+        } else {
+          resultMessage = `Guess: ${guess} - Congratulations. You guessed it!`;
+          status.textContent = `Tries: ${tries}, total time: ${Math.round(
+            elapsedTime / 60000
+          )} m`;
+          button.disabled = true;
+        }
+
+        guesses.unshift({ message: resultMessage, class: resultClass }); // Add the latest guess to the start of the array
+        displayResults(); // Update the display
+
+        if (elapsedTime >= timeout) {
+          message.textContent = "Time's up.";
+          button.disabled = true;
+          return;
+        }
+
+        if (resultMessage.includes("Congratulations")) {
+          return;
+        }
+
+        input.value = "";
+      }
+
+      function displayResults() {
+        results.innerHTML = ""; // Clear previous results
+        guesses.forEach((guess) => {
+          const guessElem = document.createElement("p");
+          guessElem.textContent = guess.message;
+          guessElem.className = guess.class;
+          results.appendChild(guessElem);
+        });
+      }
+    </script>
   </body>
 </html>
