@@ -1,6 +1,6 @@
-const random = Math.floor(Math.random() * 20000) + 1;
+const random = Math.floor(Math.random() * 40000) + 1;
 let tries = 0;
-const timeout = 20 * 60 * 1000;
+const timeout = 25 * 60 * 1000;
 let guesses = [];
 const startTime = Date.now();
 const input = document.getElementById("guess-input");
@@ -12,7 +12,7 @@ const results = document.createElement("div");
 document.getElementById("game").appendChild(results);
 
 button.addEventListener("click", askGuess);
-
+daisyUI.create();
 function askGuess() {
   const roundStart = Date.now();
   tries++;
