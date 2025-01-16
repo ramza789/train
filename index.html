@@ -36,21 +36,13 @@
       referrerpolicy="no-referrer"
     ></script>
   </head>
-  <body class="text-2xl">
+  <body
+    class="text-2xl"
+    style="
+      background-image: url('https://cdn.pixabay.com/photo/2022/08/09/13/11/ireland-7374959_1280.jpg');
+    "
+  >
     <i class="fas fa-horse text-sky-400 text-center"></i>
-    <?php
-        date_default_timezone_set("Asia/Bangkok");
-        $hour = date("H");
-
-        if ($hour < 12) {
-            $greeting = "Good morning!";
-        } elseif ($hour < 18) {
-            $greeting = "Good afternoon!";
-        } else {
-            $greeting = "Good evening!";
-        }
-    ?>
-    <h1><?php echo $greeting; ?></h1>
     <div
       id="game"
       class="flex-col justify-items-center justify-center items-center mt-1"
