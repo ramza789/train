@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Number Guessing Game</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@3.5.1/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/daisyui@3.5.1/dist/full.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              clifford: "#da373d",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body class="text-2xl">
+    <i class="fas fa-horse text-sky-400 text-center"></i>
+    <?php
+        date_default_timezone_set("Asia/Bangkok");
+        $hour = date("H");
+
+        if ($hour < 12) {
+            $greeting = "Good morning!";
+        } elseif ($hour < 18) {
+            $greeting = "Good afternoon!";
+        } else {
+            $greeting = "Good evening!";
+        }
+    ?>
+    <h1><?php echo $greeting; ?></h1>
+    <div
+      id="game"
+      class="flex-col justify-items-center justify-center items-center mt-1"
+    >
+      <h3 class="mb-1">Guess a Number Between 1 and 40000</h3>
+      <input id="guess-input" class="mb-2" type="number" />
+      <script>
+        $(document).ready(function () {
+          $("input").focus(function () {
+            $(this).css("background-color", "white");
+          });
+          $("input").blur(function () {
+            $(this).css("background-color", "gray");
+          });
+        });
+      </script>
+      <button id="guess-button" class="btn btn-outline btn-info">Submit</button>
+      <p class="text-sky-400" id="message"></p>
+      <p id="status"></p>
+    </div>
+    <script>
+      const random = Math.floor(Math.random() * 40000) + 1;
+      let tries = 0;
+      const timeout = 25 * 60 * 1000;
+      let guesses = [];
+      const startTime = Date.now();
+      const input = document.getElementById("guess-input");
+      const button = document.getElementById("guess-button");
+      const message = document.getElementById("message");
+      const status = document.getElementById("status");
+      const results = document.createElement("div");
+
+      document.getElementById("game").appendChild(results);
+
+      button.addEventListener("click", askGuess);
+
+      function askGuess() {
+        const roundStart = Date.now();
+        tries++;
+
+        let guess = parseInt(input.value);
+
+        if (isNaN(guess)) {
+          message.textContent = "Please enter an integer";
+          tries--;
+          return;
+        }
+
+        const roundStop = Date.now();
+        const roundDuration = Math.round((roundStop - roundStart) / 1000);
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.round((timeout - elapsedTime) / 60000);
+
+        let resultMessage;
+        let resultClass = "";
+        if (guess > random) {
+          resultMessage = `#${tries} ${guess} - Too high, taken ${roundDuration} s, remaining ${remainingTime} m`;
+          resultClass = "text-lime-400";
+        } else if (guess < random) {
+          resultMessage = `#${tries} ${guess} - Too low, taken ${roundDuration} s, remaining ${remainingTime} m.`;
+          resultClass = "text-rose-400";
+        } else {
+          resultMessage = `Guess: ${guess} - Congratulations. You guessed it!`;
+          status.textContent = `Tries: ${tries}, total time: ${Math.round(
+            elapsedTime / 60000
+          )} m`;
+          button.disabled = true;
+        }
+
+        guesses.unshift({ message: resultMessage, class: resultClass }); // Add the latest guess to the start of the array
+        displayResults(); // Update the display
+
+        if (elapsedTime >= timeout) {
+          message.textContent = "Time's up.";
+          button.disabled = true;
+          return;
+        }
+
+        if (resultMessage.includes("Congratulations")) {
+          return;
+        }
+
+        input.value = "";
+      }
+
+      function displayResults() {
+        results.innerHTML = ""; // Clear previous results
+        guesses.forEach((guess) => {
+          const guessElem = document.createElement("p");
+          guessElem.textContent = guess.message;
+          guessElem.className = guess.class;
+          results.appendChild(guessElem);
+        });
+      }
+    </script>
+  </body>
+</html>
