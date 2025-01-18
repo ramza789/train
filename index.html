@@ -35,20 +35,20 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <style>
+      * {
+        background-image: url("https://images.pexels.com/photos/3038816/pexels-photo-3038816.jpeg?auto=compress&cs=tinysrgb&w=400");
+      }
+    </style>
   </head>
-  <body
-    class="text-2xl"
-    style="
-      background-image: url('https://www.mediafire.com/view/jbtmlz9u6bhfzjz/Sample_-_New_York_Sunset_-_HDR.jpg/file');
-    "
-  >
+  <body class="text-2xl">
     <i class="fas fa-horse text-sky-400 text-center"></i>
     <div
       id="game"
       class="flex-col justify-items-center justify-center items-center mt-1"
     >
       <h3 class="mb-1">Guess a Number Between 1 and 40000</h3>
-      <input id="guess-input" class="mb-2" type="number" />
+      <input id="guess-input" class="mb-2 text-zinc-100" type="number" />
       <script>
         $(document).ready(function () {
           $("input").focus(function () {
